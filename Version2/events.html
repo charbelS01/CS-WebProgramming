@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browser Events Catalog</title>
+    <style>
+      /* ========================================
+           RESET & BASE STYLES
+           ======================================== */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.7;
+        color: #2d3748;
+        min-height: 100vh;
+        overflow-y: scroll;
+        background: linear-gradient(
+          135deg,
+          #e3f2fd 0%,
+          #ffffff 40%,
+          #e8f0fe 100%
+        );
+        background-attachment: fixed;
+      }
+
+      /* ========================================
+           NAVIGATION
+           ======================================== */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        padding: 1.2rem 2rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid rgba(48, 111, 227, 0.1);
+        animation: slideDown 0.5s ease-out;
+        border-radius: 12px 12px 12px 12px;
+      }
+
+      @keyframes slideDown {
+        from {
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 2.5rem;
+        margin: 0;
+        padding: 0;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      nav ul li a {
+        text-decoration: none;
+        color: #4a5568;
+        font-weight: 600;
+        font-size: 0.95rem;
+        position: relative;
+        transition: all 0.3s ease;
+        letter-spacing: 0.3px;
+      }
+
+      nav ul li a::after {
+        content: "";
+        position: absolute;
+        width: 0%;
+        height: 3px;
+        left: 0;
+        bottom: -6px;
+        background: linear-gradient(90deg, #306fe3, #4a90e2);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+      }
+
+      nav ul li a:hover {
+        color: #306fe3;
+        transform: translateY(-2px);
+      }
+
+      nav ul li a:hover::after {
+        width: 100%;
+      }
+
+      /* ========================================
+           TYPOGRAPHY
+           ======================================== */
+      h1 {
+        text-align: center;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -1px;
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ========================================
+           LAYOUT
+           ======================================== */
+      main {
+        max-width: 1400px;
+        margin: 3rem auto;
+        padding: 3rem;
+        background: linear-gradient(
+          135deg,
+          #f8f9fb 0%,
+          #ffffff 50%,
+          #f8f9fb 100%
+        );
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+      }
+
+      /* ========================================
+           SEARCH AND FILTER CONTROLS
+           ======================================== */
+      .controls {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .search-container {
+        flex: 1;
+        min-width: 250px;
+        position: relative;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 12px 20px 12px 45px;
+        font-size: 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        background: white;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #a0aec0;
+      }
+
+      .filter-container {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .filter-label {
+        font-weight: 600;
+        color: #4a5568;
+      }
+
+      .filter-select {
+        padding: 10px 15px;
+        font-size: 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 200px;
+      }
+
+      .filter-select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .results-count {
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      /* ========================================
+           EVENTS TABLE
+           ======================================== */
+      .table-container {
+        overflow-x: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      thead {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      th {
+        padding: 18px;
+        text-align: left;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.85rem;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      td {
+        padding: 15px 18px;
+        border-bottom: 1px solid #e8eaf6;
+      }
+
+      tbody tr {
+        transition: all 0.3s ease;
+      }
+
+      tbody tr:hover {
+        background: linear-gradient(
+          90deg,
+          rgba(102, 126, 234, 0.08) 0%,
+          rgba(118, 75, 162, 0.08) 100%
+        );
+        transform: scale(1.01);
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* Event name styling */
+      .event-name {
+        font-weight: 600;
+        color: #306fe3;
+        font-family: "Courier New", monospace;
+        font-size: 1rem;
+      }
+
+      /* Category badges */
+      .category-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      /* Category colors */
+      .category-UiEvent {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .category-Event {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .category-AnimationEvent {
+        background: #fce7f3;
+        color: #9f1239;
+      }
+      .category-FocusEvent {
+        background: #e9d5ff;
+        color: #6b21a8;
+      }
+      .category-MouseEvent {
+        background: #fed7aa;
+        color: #9a3412;
+      }
+      .category-ClipboardEvent {
+        background: #ccfbf1;
+        color: #134e4a;
+      }
+      .category-DragEvent {
+        background: #fecaca;
+        color: #991b1b;
+      }
+      .category-ProgressEvent {
+        background: #e0e7ff;
+        color: #3730a3;
+      }
+      .category-HashChangeEvent {
+        background: #f3e8ff;
+        color: #6d28d9;
+      }
+      .category-InputEvent {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .category-KeyboardEvent {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .category-PageTransitionEvent {
+        background: #fef9c3;
+        color: #854d0e;
+      }
+      .category-TouchEvent {
+        background: #ffedd5;
+        color: #9a3412;
+      }
+      .category-TransitionEvent {
+        background: #f0fdf4;
+        color: #166534;
+      }
+      .category-WheelEvent {
+        background: #f0f9ff;
+        color: #075985;
+      }
+
+      /* Tags styling */
+      .tags {
+        font-size: 0.85rem;
+        color: #718096;
+        max-width: 300px;
+        line-height: 1.4;
+      }
+
+      /* Link button */
+      .doc-link {
+        display: inline-block;
+        padding: 6px 16px;
+        background: linear-gradient(135deg, #306fe3, #4a90e2);
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .doc-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(48, 111, 227, 0.3);
+        background: linear-gradient(135deg, #4a90e2, #306fe3);
+      }
+
+      /* No results message */
+      .no-results {
+        text-align: center;
+        padding: 3rem;
+        color: #718096;
+        font-size: 1.1rem;
+      }
+
+      /* Footer */
+      footer {
+        margin-top: 3rem;
+        padding: 2rem;
+        text-align: center;
+        color: #718096;
+        border-top: 2px solid #e2e8f0;
+      }
+
+      footer p {
+        margin: 0.5rem 0;
+        font-size: 0.95rem;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        main {
+          margin: 1rem;
+          padding: 1.5rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .controls {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .filter-container {
+          flex-direction: column;
+        }
+
+        .filter-select {
+          width: 100%;
+        }
+
+        table {
+          font-size: 0.85rem;
+        }
+
+        th,
+        td {
+          padding: 10px;
+        }
+
+        .tags {
+          max-width: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav aria-label="Main navigation" link rel="stylesheet" href="style.css">
+      <ul>
+        <li><a href="../index.html">Welcome Hub </a></li>
+        <li><a href="history.html">History of the Web & Browsers</a></li>
+        <li><a href="arabic.html">تأثير الإنترنت على الحياة اليومية</a></li>
+        <li><a href="security.html">Security on the Web/Internet</a></li>
+        <li><a href="mobile-first.html">Mobile-First Development</a></li>
+        <li>
+          <a href="stats.html">Internet Stats (Middle East & Lebanon)</a>
+        </li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cv.html">CV</a></li>
+        <li><a href="cvmaker.html">CV Maker</a></li>
+        <li><a href="schedule.html">Schedule</a></li>
+        <li><a href="references.html">References</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <h1>Browser Events Catalog</h1>
+
+      <div class="controls">
+        <div class="search-container">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            class="search-input"
+            id="searchInput"
+            placeholder="Search events by name, category, or description..."
+          />
+        </div>
+
+        <div class="filter-container">
+          <label class="filter-label">Category:</label>
+          <select class="filter-select" id="categoryFilter">
+            <option value="">All Categories</option>
+          </select>
+        </div>
+
+        <div class="results-count" id="resultsCount">Loading events...</div>
+      </div>
+
+      <div class="table-container">
+        <table id="eventsTable">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th>Supported Tags</th>
+              <th>Documentation</th>
+            </tr>
+          </thead>
+          <tbody id="eventsTableBody">
+            <!-- Events will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 Browser Events Catalog</p>
+      <p>Interactive reference for HTML DOM events</p>
+      <p>Last updated: 12 November 2025</p>
+    </footer>
+
+    <script>
+      // Events data
+      const htmlEvents = [
+        {
+          event: "onabort",
+          category: "UiEvent, Event",
+          description: "The loading of a media is aborted",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onabort_media.asp",
+        },
+        {
+          event: "onafterprint",
+          category: "Event",
+          description: "A page has started printing",
+          tags: "<body>",
+          link: "https://www.w3schools.com/jsref/event_onafterprint.asp",
+        },
+        {
+          event: "animationend",
+          category: "AnimationEvent",
+          description: "A CSS animation has completed",
+          tags: "N/A",
+          link: "https://www.w3schools.com/jsref/event_animationend.asp",
+        },
+        {
+          event: "animationiteration",
+          category: "AnimationEvent",
+          description: "A CSS animation is repeated",
+          tags: "N/A",
+          link: "https://www.w3schools.com/jsref/event_animationiteration.asp",
+        },
+        {
+          event: "animationstart",
+          category: "AnimationEvent",
+          description: "A CSS animation has started",
+          tags: "N/A",
+          link: "https://www.w3schools.com/jsref/event_animationstart.asp",
+        },
+        {
+          event: "onbeforeprint",
+          category: "Event",
+          description: "A page is about to be printed",
+          tags: "<body>",
+          link: "https://www.w3schools.com/jsref/event_onbeforeprint.asp",
+        },
+        {
+          event: "onbeforeunload",
+          category: "UiEvent, Event",
+          description: "Before a document is about to be unloaded",
+          tags: "<body>",
+          link: "https://www.w3schools.com/jsref/event_onbeforeunload.asp",
+        },
+        {
+          event: "onblur",
+          category: "FocusEvent",
+          description: "An element loses focus",
+          tags: "ALL HTML elements, EXCEPT: <base>, <bdo>, <br>, <head>, <html>, <iframe>, <meta>, <param>, <script>, <style>, and <title>",
+          link: "https://www.w3schools.com/jsref/event_onblur.asp",
+        },
+        {
+          event: "oncanplay",
+          category: "Event",
+          description:
+            "The browser can start playing a media (has buffered enough to begin)",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_oncanplay.asp",
+        },
+        {
+          event: "oncanplaythrough",
+          category: "Event",
+          description:
+            "The browser can play through a media without stopping for buffering",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_oncanplaythrough.asp",
+        },
+        {
+          event: "onchange",
+          category: "Event",
+          description: "The content of a form element has changed",
+          tags: '<input type="checkbox">, <input type="color">, <input type="date">, <input type="datetime">, <input type="email">, <input type="file">, <input type="month">, <input type="number">, <input type="password">, <input type="radio">, <input type="range">, <input type="search">, <input type="tel">, <input type="text">, <input type="time">, <input type="url">, <input type="week">, <select> and <textarea>',
+          link: "https://www.w3schools.com/jsref/event_onchange.asp",
+        },
+        {
+          event: "onclick",
+          category: "MouseEvent",
+          description: "An element is clicked on",
+          tags: "All except: <base>, <bdo>, <br>,",
+          link: "https://www.w3schools.com/jsref/event_onclick.asp",
+        },
+        {
+          event: "oncontextmenu",
+          category: "MouseEvent",
+          description: "An element is right-clicked to open a context menu",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_oncontextmenu.asp",
+        },
+        {
+          event: "oncopy",
+          category: "ClipboardEvent",
+          description: "The content of an element is copied",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_oncopy.asp",
+        },
+        {
+          event: "oncut",
+          category: "ClipboardEvent",
+          description: "The content of an element is cut",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_oncut.asp",
+        },
+        {
+          event: "ondblclick",
+          category: "MouseEvent",
+          description: "An element is double-clicked",
+          tags: "All HTML elements, EXCEPT: <base>, <bdo>, <br>,",
+          link: "https://www.w3schools.com/jsref/event_ondblclick.asp",
+        },
+        {
+          event: "ondrag",
+          category: "DragEvent",
+          description: "An element is being dragged",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_ondrag.asp",
+        },
+        {
+          event: "ondragend",
+          category: "DragEvent",
+          description: "Dragging of an element has ended",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_ondragend.asp",
+        },
+        {
+          event: "ondragenter",
+          category: "DragEvent",
+          description: "A dragged element enters the drop target",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_ondragenter.asp",
+        },
+        {
+          event: "ondragleave",
+          category: "DragEvent",
+          description: "A dragged element leaves the drop target",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_ondragleave.asp",
+        },
+        {
+          event: "ondragover",
+          category: "DragEvent",
+          description: "A dragged element is over the drop target",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_ondragover.asp",
+        },
+        {
+          event: "ondragstart",
+          category: "DragEvent",
+          description: "Dragging of an element has started",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_ondragstart.asp",
+        },
+        {
+          event: "ondrop",
+          category: "DragEvent",
+          description: "A dragged element is dropped on the target",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_ondrop.asp",
+        },
+        {
+          event: "ondurationchange",
+          category: "Event",
+          description: "The duration of a media is changed",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_ondurationchange.asp",
+        },
+        {
+          event: "onended",
+          category: "Event",
+          description: 'A media has reach the end ("thanks for listening")',
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onended.asp",
+        },
+        {
+          event: "onerror",
+          category: "ProgressEvent, UiEvent, Event",
+          description: "An error has occurred while loading a file",
+          tags: '<img>, <input type="image">, <object>, <link>,',
+          link: "https://www.w3schools.com/jsref/event_onerror.asp",
+        },
+        {
+          event: "onfocus",
+          category: "FocusEvent",
+          description: "An element gets focus",
+          tags: "ALL HTML elements, EXCEPT: <base>, <bdo>, <br>, <head>, <html>, <iframe>, <meta>, <param>, <script>, <style>, and <title>",
+          link: "https://www.w3schools.com/jsref/event_onfocus.asp",
+        },
+        {
+          event: "onfocusin",
+          category: "FocusEvent",
+          description: "An element is about to get focus",
+          tags: "ALL HTML elements, EXCEPT: <base>, <bdo>, <br>, <head>, <html>, <iframe>, <meta>, <param>, <script>, <style>, and <title>",
+          link: "https://www.w3schools.com/jsref/event_onfocusin.asp",
+        },
+        {
+          event: "onfocusout",
+          category: "FocusEvent",
+          description: "An element is about to lose focus",
+          tags: "ALL HTML elements, EXCEPT: <base>, <bdo>, <br>, <head>, <html>, <iframe>, <meta>, <param>, <script>, <style>, and <title>",
+          link: "https://www.w3schools.com/jsref/event_onfocusout.asp",
+        },
+        {
+          event: "fullscreenchange",
+          category: "Event",
+          description: "An element is displayed in fullscreen mode",
+          tags: "ALL HTML elements",
+          link: "https://www.w3schools.com/jsref/event_fullscreenchange.asp",
+        },
+        {
+          event: "fullscreenerror",
+          category: "Event",
+          description: "An element can not be displayed in fullscreen mode",
+          tags: "ALL HTML elements",
+          link: "https://www.w3schools.com/jsref/event_fullscreenerror.asp",
+        },
+        {
+          event: "onhashchange",
+          category: "HashChangeEvent",
+          description: "There has been changes to the anchor part of a URL",
+          tags: "<body>",
+          link: "https://www.w3schools.com/jsref/event_onhashchange.asp",
+        },
+        {
+          event: "oninput",
+          category: "InputEvent, Event",
+          description: "An element gets user input",
+          tags: "<input> and <textarea>",
+          link: "https://www.w3schools.com/jsref/event_oninput.asp",
+        },
+        {
+          event: "oninvalid",
+          category: "Event",
+          description: "An element is invalid",
+          tags: "<input>",
+          link: "https://www.w3schools.com/jsref/event_oninvalid.asp",
+        },
+        {
+          event: "onkeydown",
+          category: "KeyboardEvent",
+          description: "A key is down",
+          tags: "All HTML elements, EXCEPT: <base>, <bdo>, <br>,",
+          link: "https://www.w3schools.com/jsref/event_onkeydown.asp",
+        },
+        {
+          event: "onkeypress",
+          category: "KeyboardEvent",
+          description: "A key is pressed",
+          tags: "All HTML elements, EXCEPT: <base>, <bdo>, <br>,",
+          link: "https://www.w3schools.com/jsref/event_onkeypress.asp",
+        },
+        {
+          event: "onkeyup",
+          category: "KeyboardEvent",
+          description: "A key is released",
+          tags: "All HTML elements, EXCEPT: <base>, <bdo>, <br>,",
+          link: "https://www.w3schools.com/jsref/event_onkeyup.asp",
+        },
+        {
+          event: "onload",
+          category: "UiEvent, Event",
+          description: "An object has loaded",
+          tags: '<body>, <frame>, <iframe>, <img>, <input type="image">,',
+          link: "https://www.w3schools.com/jsref/event_onload.asp",
+        },
+        {
+          event: "onloadeddata",
+          category: "Event",
+          description: "Media data is loaded",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onloadeddata.asp",
+        },
+        {
+          event: "onloadedmetadata",
+          category: "Event",
+          description: "Meta data (like dimensions and duration) are loaded",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onloadedmetadata.asp",
+        },
+        {
+          event: "onloadstart",
+          category: "ProgressEvent",
+          description: "The browser starts looking for the specified media",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onloadstart.asp",
+        },
+        {
+          event: "onmessage_sse",
+          category: "Event",
+          description: "A message is received through the event source",
+          tags: "N/A",
+          link: "https://www.w3schools.com/jsref/event_onmessage_sse.asp",
+        },
+        {
+          event: "onmousedown",
+          category: "MouseEvent",
+          description: "The mouse button is pressed over an element",
+          tags: "All HTML elements, EXCEPT: <base>, <bdo>, <br>,",
+          link: "https://www.w3schools.com/jsref/event_onmousedown.asp",
+        },
+        {
+          event: "onmouseenter",
+          category: "MouseEvent",
+          description: "The pointer is moved onto an element",
+          tags: "All HTML elements, EXCEPT: <base>, <bdo>, <br>,",
+          link: "https://www.w3schools.com/jsref/event_onmouseenter.asp",
+        },
+        {
+          event: "onmouseleave",
+          category: "MouseEvent",
+          description: "The pointer is moved out of an element",
+          tags: "All HTML elements, EXCEPT: <base>, <bdo>, <br>,",
+          link: "https://www.w3schools.com/jsref/event_onmouseleave.asp",
+        },
+        {
+          event: "onmousemove",
+          category: "MouseEvent",
+          description: "The pointer is moved over an element",
+          tags: "All HTML elements, EXCEPT: <base>, <bdo>, <br>,",
+          link: "https://www.w3schools.com/jsref/event_onmousemove.asp",
+        },
+        {
+          event: "onmouseover",
+          category: "MouseEvent",
+          description: "The pointer is moved onto an element",
+          tags: "All HTML elements, EXCEPT: <base>, <bdo>, <br>,",
+          link: "https://www.w3schools.com/jsref/event_onmouseover.asp",
+        },
+        {
+          event: "onmouseout",
+          category: "MouseEvent",
+          description: "The pointer is moved out of an element",
+          tags: "All HTML elements, EXCEPT: <base>, <bdo>, <br>,",
+          link: "https://www.w3schools.com/jsref/event_onmouseout.asp",
+        },
+        {
+          event: "onmouseup",
+          category: "MouseEvent",
+          description: "A user releases a mouse button over an element",
+          tags: "All HTML elements, EXCEPT: <base>, <bdo>, <br>,",
+          link: "https://www.w3schools.com/jsref/event_onmouseup.asp",
+        },
+        {
+          event: "onoffline",
+          category: "Event",
+          description: "The browser starts working offline",
+          tags: "<body>",
+          link: "https://www.w3schools.com/jsref/event_onoffline.asp",
+        },
+        {
+          event: "ononline",
+          category: "Event",
+          description: "The browser starts working online",
+          tags: "<body>",
+          link: "https://www.w3schools.com/jsref/event_ononline.asp",
+        },
+        {
+          event: "onopen_sse",
+          category: "Event",
+          description: "A connection with the event source is opened",
+          tags: "N/A",
+          link: "https://www.w3schools.com/jsref/event_onopen_sse.asp",
+        },
+        {
+          event: "onpagehide",
+          category: "PageTransitionEvent",
+          description: "User navigates away from a webpage",
+          tags: "<body>",
+          link: "https://www.w3schools.com/jsref/event_onpagehide.asp",
+        },
+        {
+          event: "onpageshow",
+          category: "PageTransitionEvent",
+          description: "User navigates to a webpage",
+          tags: "<body>",
+          link: "https://www.w3schools.com/jsref/event_onpageshow.asp",
+        },
+        {
+          event: "onpaste",
+          category: "ClipboardEvent",
+          description: "Some content is pasted in an element",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_onpaste.asp",
+        },
+        {
+          event: "onpause",
+          category: "Event",
+          description: "A media is paused",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onpause.asp",
+        },
+        {
+          event: "onplay",
+          category: "Event",
+          description: "The media has started or is no longer paused",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onplay.asp",
+        },
+        {
+          event: "onplaying",
+          category: "Event",
+          description: "The media is playing after being paused or buffered",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onplaying.asp",
+        },
+        {
+          event: "onprogress",
+          category: "Event",
+          description: "The browser is downloading media data",
+          tags: "<audio>, <video>",
+          link: "https://www.w3schools.com/jsref/event_onprogress.asp",
+        },
+        {
+          event: "onratechange",
+          category: "Event",
+          description: "The playing speed of a media is changed",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onratechange.asp",
+        },
+        {
+          event: "onresize",
+          category: "UiEvent, Event",
+          description: "The document view is resized",
+          tags: "<body>",
+          link: "https://www.w3schools.com/jsref/event_onresize.asp",
+        },
+        {
+          event: "onreset",
+          category: "Event",
+          description: "A form is reset",
+          tags: "<form>",
+          link: "https://www.w3schools.com/jsref/event_onreset.asp",
+        },
+        {
+          event: "onscroll",
+          category: "UiEvent, Event",
+          description: "A scrollbar is being scrolled",
+          tags: "<address>, <blockquote>, <body>, <caption>, <center>, <dd>, <dir>, <div>, <dl>, <dt>, <fieldset>, <form>, <h1> to <h6>, <html>, <li>, <menu>, <object>, <ol>, <p>, <pre>, <select>, <tbody>, <textarea>, <tfoot>, <thead>, <ul>",
+          link: "https://www.w3schools.com/jsref/event_onscroll.asp",
+        },
+        {
+          event: "onsearch",
+          category: "Event",
+          description: "Something is written in a search field",
+          tags: '<input type="search">',
+          link: "https://www.w3schools.com/jsref/event_onsearch.asp",
+        },
+        {
+          event: "onseeked",
+          category: "Event",
+          description: "Skipping to a media position is finished",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onseeked.asp",
+        },
+        {
+          event: "onseeking",
+          category: "Event",
+          description: "Skipping to a media position is started",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onseeking.asp",
+        },
+        {
+          event: "onselect",
+          category: "UiEvent, Event",
+          description: "User selects some text",
+          tags: '<input type="file">, <input type="password">, <input type="text">, and <textarea>',
+          link: "https://www.w3schools.com/jsref/event_onselect.asp",
+        },
+        {
+          event: "onshow",
+          category: "Event",
+          description: "A <menu> element is shown as a context menu",
+          tags: "<menu>",
+          link: "https://www.w3schools.com/jsref/event_onshow.asp",
+        },
+        {
+          event: "onstalled",
+          category: "Event",
+          description: "The browser is trying to get unavailable media data",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onstalled.asp",
+        },
+        {
+          event: "onsubmit",
+          category: "Event",
+          description: "A form is submitted",
+          tags: "<form>",
+          link: "https://www.w3schools.com/jsref/event_onsubmit.asp",
+        },
+        {
+          event: "onsuspend",
+          category: "Event",
+          description: "The browser is intentionally not getting media data",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onsuspend.asp",
+        },
+        {
+          event: "ontimeupdate",
+          category: "Event",
+          description:
+            "The playing position has changed (the user \nmoves to a different point in the media)",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_ontimeupdate.asp",
+        },
+        {
+          event: "ontoggle",
+          category: "Event",
+          description: "The user opens or closes the <details> element",
+          tags: "<details>",
+          link: "https://www.w3schools.com/jsref/event_ontoggle.asp",
+        },
+        {
+          event: "touchcancel",
+          category: "TouchEvent",
+          description: "The touch is interrupted",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_touchcancel.asp",
+        },
+        {
+          event: "touchend",
+          category: "TouchEvent",
+          description: "A finger is removed from a touch screen",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_touchend.asp",
+        },
+        {
+          event: "touchmove",
+          category: "TouchEvent",
+          description: "A finger is dragged across the screen",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_touchmove.asp",
+        },
+        {
+          event: "touchstart",
+          category: "TouchEvent",
+          description: "A finger is placed on a touch screen",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_touchstart.asp",
+        },
+        {
+          event: "transitionend",
+          category: "TransitionEvent",
+          description: "A CSS transition has completed",
+          tags: "N/A",
+          link: "https://www.w3schools.com/jsref/event_transitionend.asp",
+        },
+        {
+          event: "onunload",
+          category: "UiEvent, Event",
+          description: "A page has unloaded",
+          tags: "<body>",
+          link: "https://www.w3schools.com/jsref/event_onunload.asp",
+        },
+        {
+          event: "onvolumechange",
+          category: "Event",
+          description: "The volume of a media is changed (includes muting)",
+          tags: "<audio> and <video>",
+          link: "https://www.w3schools.com/jsref/event_onvolumechange.asp",
+        },
+        {
+          event: "onwaiting",
+          category: "Event",
+          description:
+            "A media is paused but is expected to resume (e.g. buffering)",
+          tags: "<audio>, <video>",
+          link: "https://www.w3schools.com/jsref/event_onwaiting.asp",
+        },
+        {
+          event: "onwheel",
+          category: "WheelEvent",
+          description: "The mouse wheel rolls up or down over an element",
+          tags: "All HTML elements",
+          link: "https://www.w3schools.com/jsref/event_onwheel.asp",
+        },
+      ];
+
+      // Initialize the page
+      let filteredEvents = [...htmlEvents];
+
+      function init() {
+        // Sort events alphabetically by event name
+        htmlEvents.sort((a, b) => a.event.localeCompare(b.event));
+
+        populateCategoryFilter();
+        renderTable(htmlEvents);
+        updateResultsCount(htmlEvents.length);
+
+        // Add event listeners
+        document
+          .getElementById("searchInput")
+          .addEventListener("input", filterEvents);
+        document
+          .getElementById("categoryFilter")
+          .addEventListener("change", filterEvents);
+      }
+
+      // Populate category filter dropdown
+      function populateCategoryFilter() {
+        const categories = new Set();
+        htmlEvents.forEach((event) => {
+          // Split multiple categories and add each
+          event.category.split(",").forEach((cat) => {
+            categories.add(cat.trim());
+          });
+        });
+
+        const categoryFilter = document.getElementById("categoryFilter");
+        Array.from(categories)
+          .sort()
+          .forEach((category) => {
+            const option = document.createElement("option");
+            option.value = category;
+            option.textContent = category;
+            categoryFilter.appendChild(option);
+          });
+      }
+
+      // Helper function to escape HTML
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // Render the table
+      function renderTable(events) {
+        const tbody = document.getElementById("eventsTableBody");
+
+        if (events.length === 0) {
+          tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="no-results">
+                            No events found matching your criteria
+                        </td>
+                    </tr>
+                `;
+          return;
+        }
+
+        tbody.innerHTML = events
+          .map((event) => {
+            // Get the main category for styling
+            const mainCategory = event.category
+              .split(",")[0]
+              .trim()
+              .replace(/\s/g, "");
+
+            return `
+                    <tr>
+                        <td><span class="event-name">${escapeHtml(
+                          event.event
+                        )}</span></td>
+                        <td><span class="category-badge category-${mainCategory}">${escapeHtml(
+              event.category
+            )}</span></td>
+                        <td>${escapeHtml(event.description)}</td>
+                        <td class="tags">${escapeHtml(event.tags)}</td>
+                        <td>
+                            <a href="${
+                              event.link
+                            }" target="_blank" class="doc-link">
+                                View Docs
+                            </a>
+                        </td>
+                    </tr>
+                `;
+          })
+          .join("");
+      }
+
+      // Filter events based on search and category
+      function filterEvents() {
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const selectedCategory =
+          document.getElementById("categoryFilter").value;
+
+        filteredEvents = htmlEvents.filter((event) => {
+          const matchesSearch =
+            !searchTerm ||
+            event.event.toLowerCase().includes(searchTerm) ||
+            event.category.toLowerCase().includes(searchTerm) ||
+            event.description.toLowerCase().includes(searchTerm) ||
+            event.tags.toLowerCase().includes(searchTerm);
+
+          // Fixed category matching - check if the selected category is in the event's category list
+          const matchesCategory =
+            !selectedCategory ||
+            event.category
+              .split(",")
+              .some((cat) => cat.trim() === selectedCategory);
+
+          return matchesSearch && matchesCategory;
+        });
+
+        // Sort filtered results alphabetically
+        filteredEvents.sort((a, b) => a.event.localeCompare(b.event));
+
+        renderTable(filteredEvents);
+        updateResultsCount(filteredEvents.length);
+      }
+
+      // Update results count
+      function updateResultsCount(count) {
+        const resultsCount = document.getElementById("resultsCount");
+        resultsCount.textContent = `${count} event${
+          count !== 1 ? "s" : ""
+        } found`;
+      }
+
+      // Initialize when DOM is loaded
+      document.addEventListener("DOMContentLoaded", init);
+    </script>
+  </body>
+</html>
