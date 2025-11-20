@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Security on the Web/Internet</title>
+    <meta
+      name="description"
+      content="Security of the web."
+    />
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header>
+      <h1>Security on the Web/Internet</h1>
+    </header>
+    
+    <nav aria-label="Main navigation" link rel="stylesheet" href="style.css">
+      <ul>
+        <li><a href="../index.html">Welcome Hub </a></li>
+        <li><a href="history.html">History of the Web & Browsers</a></li>
+        <li><a href="arabic.html">تأثير الإنترنت على الحياة اليومية</a></li>
+        <li><a href="security.html">Security on the Web/Internet</a></li>
+        <li><a href="mobile-first.html">Mobile-First Development</a></li>
+        <li>
+          <a href="stats.html">Internet Stats (Middle East & Lebanon)</a>
+        </li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cv.html">CV</a></li>
+        <li><a href="cvmaker.html">CV Maker</a></li>
+        <li><a href="schedule.html">Schedule</a></li>
+        <li><a href="TicTacToe.html">TicTacToe</a></li>
+        <li><a href="references.html">References</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <article>
+
+        <section>
+          <h3>Introduction</h3>
+          <p>
+            As more and more people utilize the Web and the Internet, security 
+            is becoming a bigger and bigger problem.    Because threats are always
+            changing, businesses, developers, and users all need to change. 
+            In addition to tech problems, bad web apps can cost you a lot of money, 
+            hurt your reputation, and make you worry about your privacy.
+          </p>
+        </section>
+
+        <section>
+          <h3>Common Risks</h3>
+          <p>
+            The OWASP Top 10 (2021 edition) <a href="references.html">[8]</a> lists the ten most critical security issues in web apps around the world.    Some of the more important ones are:<br>
+            <ul>
+                <li>Broken Access Control: This happens when people are given access to things they shouldn't have.    For instance, a normal user might be able to see confidential documents or undertake administrative tasks since the rules about who can do what aren't always followed. "94% of applications were tested for some form of broken access control" .<a href="references.html">[8]</a></li>
+                <li>Cryptographic Failures:  "Which was broad symptom rather than a root cause. The renewed focus here is on failures related to cryptography which often leads to sensitive data exposure or system compromise" .<a href="references.html">[8]</a> </li>
+                <li>Injection Vulnerabilities: SQL, OS, and NoSQL injections can happen when an interpreter gets input that hasn't been checked.    Attackers can see data they shouldn't be able to see or run any command they want <a href="references.html">[9]</a>. "94% of the applications were tested for some form of injection" .<a href="references.html">[8]</a> </li>
+                <li>Security Misconfigurations: Attackers can get helpful information from default settings that haven't been changed, services that aren't needed, or error messages that are too long.</li>
+                <li>Weaknesses: Many websites still utilize old frameworks, CMS plugins, and libraries.    Attackers could be able to use these because they still have problems that need to be fixed.</li>
+            </ul>
+          </p>
+          <figure align="center">
+            <img src="mapping.png" alt="OWASP Top 10 2021" class="responsive-img" />
+            <figcaption>
+              OWASP Top 10 2021 <a href="references.html">[8]</a>
+            </figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <h3>Real Violations</h3>
+          <p>
+            Things are risky when you look at examples.    The 2017 Equifax hack affected more than 140 million accounts. It was caused by a flaw in Apache Struts that had not been addressed.   This is an example of how to employ dangerous parts.    The Log4j problem that was found in late 2021 shows that even a modest yet well-known library might cause a disaster over the world.    Attackers used it to run any virus they wanted on servers, which hurt banks, governments, and important infrastructure.
+            These security tips should be followed by both developers and users to lower risks:
+            <ul>  
+                <li>Use HTTPS/TLS to keep your messages safe and follow the most up-to-date cryptographic standards.    It is no longer possible to utilize the algorithms SHA-1 and RC4.</li>
+                <li>Use parameterized queries instead of string concatenation, and check and clean all inputs.</li>
+                <li>Quickly update software and dependencies to fix any security holes that have been found.</li>
+                <li>Don't give away too much information about failures, turn off services that aren't needed, and set up secure defaults.</li>
+                <li>Set up monitoring and logging so that attacks may be found and looked into right away.</li>
+            </ul>
+            <p>
+              More and more businesses are using zero-trust security methods since they don't trust any device or user right away.    Every request must be checked, approved, and encrypted.    Attackers are less likely to do a lot of damage if they can get into one system.
+          </p>
+          </p>
+        </section>
+
+        <section>
+          <h3>New Issues</h3>
+          <p>
+            IoT ecosystems, mobile apps, and APIs are making the attack surface bigger.    
+            You can get in in a different way with each one.    Problems in the supply chain 
+            can be quite bad.  For example, during the SolarWinds assault in 2020, hackers 
+            utilized a software update process to gain into many firms. AI is transforming
+            the way cybersecurity works on both sides. It is getting easier and easier for
+            attackers to make phishing emails and deepfake content that looks real.    Defenders,
+            on the other side, employ AI-powered tools to find strange activity, figure out what's 
+            causing it, and fix it on their own.
+          </p>
+        </section>
+
+        <section>
+          <h3>Final thoughts</h3>
+          <p>
+            Security is an ongoing process that includes finding threats, putting best practices into action, and staying up to date.    Developers need to use tools like the OWASP Top 10 to keep up with new threats.    Secure code, proactive monitoring, and a zero-trust approach can help businesses lower their risks and keep their consumers safe in a digital world that isn't always friendly.
+          </p>
+        </section>
+
+        <section>
+            <p>
+                References: <a href="references.html">[8]</a>, <a href="references.html">[9]</a>.
+            </p> 
+        </section>
+
+        <footer>
+          <p>Last updated: 12 October 2025</p>
+        </footer>
+      </article>
+    </main>
+  </body>
+</html>
